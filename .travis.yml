@@ -1,0 +1,9 @@
+language: php
+service:
+  - docker
+before_script:
+  - composer require php-coveralls/php-coveralls
+script:
+  - docker run -v "$(pwd):/plugin" hakito/cake-plugin-test AllStripePaymentIntents --coverage-clover /plugin/build/cover.xml
+after_success:
+  - Vendor/bin/php-coveralls -v --coverage_clover build/cover.xml --json_path build/cover.json
