@@ -1,0 +1,27 @@
+{
+    "name": "hakito/cakephp-stripe-payment-intents-plugin",
+    "type": "cakephp-plugin",
+    "description": "CakePHP Plugin for Stripe Payment Intents",
+    "homepage": "https://github.com/hakito/CakePHP-StripePaymentIntents-Plugin",
+    "keywords": ["stripe", "payments", "payments intents", "credit card"],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Gerd Katzenbeisser",
+            "homepage": "https://github.com/hakito/CakePHP-StripePaymentIntents-Plugin/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "stripe/stripe-php": "^7.12"
+    },
+    "extra": {
+        "installer-name": "StripePaymentIntents"
+    },
+    "config": {
+        "vendor-dir": "Vendor"
+    },    
+    "require-dev": {
+        "phpunit/phpunit": "^5.7.27"
+    }
+}
