@@ -37,6 +37,16 @@ class StripePaymentIntentsComponent extends Component
 
         return PaymentIntent::create($arguments);
     }
+
+    /**
+     * @param string $intent Id of the intent
+     * @return \Stripe\PaymentIntent
+     */
+    public function Retrieve($intent)
+    {
+        return PaymentIntent::retrieve($intent);
+    }
+
     /**
      * Handles the Stripe webhook
      * @param string $rawPostStream will read from this stream or file with file_get_contents

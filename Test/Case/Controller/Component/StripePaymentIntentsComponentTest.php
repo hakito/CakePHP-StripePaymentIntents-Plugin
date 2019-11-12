@@ -36,6 +36,16 @@ class StripePaymentIntentsComponentTest extends CakeTestCase {
         $this->assertStringStartsWith('pi_', $actual->id);   
     }
 
+    public function testRetrieve()
+    {
+        $expected = $this->Component->Create(123);
+        $actual = $this->Component->Retrieve($expected->id);
+        $expected = $expected->toArray();
+        
+        $actual = $actual->toArray();
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testCreateOverridesDefault()
     {
         $actual = $this->Component->Create(123, ['amount' => 456, 'description' => 'IntegrationTest']);  
