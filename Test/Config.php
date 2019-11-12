@@ -3,9 +3,15 @@
 Configure::write('StripePaymentIntents', [
     'mode'=> 'test',
     'currency' => 'eur',
-    'secret' => [
-        'test' => 'sk_test_4eC39HqLyjWDarjtT1zdp7dc',
-        'live' => 'pk_live_4eC39HqLyjWDarjtT1zdp7dc'
+    'keys' => [
+        'test' => [
+            'secret' => 'sk_test_4eC39HqLyjWDarjtT1zdp7dc',
+            'public' => 'pk_test',
+        ],
+        'live' => [
+            'secret' => 'sk_live_key',
+            'public' => 'pk_live_key'
+        ]
     ],
     'logging' => false,
 

@@ -28,6 +28,11 @@ class StripePaymentIntentsComponentTest extends CakeTestCase {
         Cache::clear();        
     } 
 
+    public function testGetPublicKey()
+    {
+        $this->assertEquals('pk_test', $this->Component->GetPublicKey());
+    }
+
     public function testCreate()
     {
         $actual = $this->Component->Create(123);    

@@ -8,12 +8,17 @@ use \Stripe\Event;
 
 class StripePaymentIntentsComponent extends Component
 {   
+    private $publicKey;
+    public function GetPublicKey() { return $this->publicKey; }    
+
     public function __construct($collection)
     {
         parent::__construct($collection);
         $config = $this->GetConfig();
         $mode = $config['mode'];
-        Stripe::setApiKey($config['secret'][$mode]);
+        $keys = &$config['keys'][$mode];
+        Stripe::setApiKey($keys['secret']);
+        $this->publicKey = $keys['public'];
     }
 
     public function startup(\Controller $controller)
