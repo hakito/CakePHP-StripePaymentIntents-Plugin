@@ -60,3 +60,47 @@ Configure::write('StripePaymentIntents', [
     'callback' => 'stripeWebhookCallback', // Name of callback function for stripe events to be called in app controller
 ]);
 ```
+
+Usage
+-----
+
+Add the plugin component to your controller:
+
+```php
+public $components = ['StripePaymentIntents.StripePaymentIntents'];
+```
+
+Create or retrieve a payment intent for the checkout process
+
+```php
+// create new
+$pi = $this->StripePaymentIntents->Create(1234, ['metadata' => ['order_id' => $orderId]]); // 12.34
+// or update shopping cart
+$pi = $this->StripePaymentIntents->Retrieve('pi_xyz');
+```
+
+Set the view data
+
+```
+$this->set('StripeClientSecret', $pi->client_secret);
+$this->set('StripePublicKey', $this->StripePaymentIntents->GetPublicKey());
+```
+
+Implement the view behavior according to [stripe documentation](https://stripe.com/docs/payments/accept-a-payment#web-collect-card-details).
+
+### Webhook callback
+
+You have to implement the webhook callback function in your AppController:
+
+```php
+/**
+* @param \Stripe\Event $event
+*/
+public function stripeWebhookCallback($event)
+{
+    if ($event->type == 'payment_intent.succeeded')
+    {
+       // handle success
+    }
+}
+```
