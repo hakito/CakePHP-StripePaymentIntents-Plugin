@@ -9,6 +9,7 @@ class StripePaymentIntentsComponentTest extends CakeTestCase {
     /** @var StripePaymentIntentsComponent */
     private $Component;
 
+    private $originalConfig;
     /**
      * setUp method
      *
@@ -17,7 +18,11 @@ class StripePaymentIntentsComponentTest extends CakeTestCase {
     public function setUp()
     {
         parent::setUp();        
-
+        $this->originalConfig = Configure::read('StripePaymentIntents');
+        $copy = $this->originalConfig;
+        $copy['keys']['test']['public'] = 'pk_test';        
+        $copy['keys']['test']['secret'] = 'sk_test_4eC39HqLyjWDarjtT1zdp7dc';
+        Configure::write('StripePaymentIntents', $copy);    
         date_default_timezone_set("UTC");
         $Collection = new ComponentCollection();
         $mockedController = $this->getMock('Controller', ['stripeWebhookCallback']);
@@ -27,6 +32,11 @@ class StripePaymentIntentsComponentTest extends CakeTestCase {
         $this->Component->startup($mockedController);
         Cache::clear();        
     } 
+
+    public function tearDown()
+    {
+        Configure::write('StripePaymentIntents', $this->originalConfig);
+    }
 
     public function testGetPublicKey()
     {
