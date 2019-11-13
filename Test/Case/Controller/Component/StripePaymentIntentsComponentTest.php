@@ -38,6 +38,11 @@ class StripePaymentIntentsComponentTest extends CakeTestCase {
         Configure::write('StripePaymentIntents', $this->originalConfig);
     }
 
+    public function testGetMode()
+    {
+        $this->assertEquals('test', $this->Component->GetMode());
+    }
+
     public function testGetPublicKey()
     {
         $this->assertEquals('pk_test', $this->Component->GetPublicKey());
