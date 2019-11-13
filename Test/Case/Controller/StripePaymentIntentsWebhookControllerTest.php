@@ -8,10 +8,14 @@ class StripePaymentIntentsWebhookControllerTest extends ControllerTestCase
         public function setUp()
         {
             $this->Controller = $this->generate('StripePaymentIntents.StripePaymentIntentsWebhook',
-                    [
-                        'methods' => array ('webhook'),
-                        'components' => array('StripePaymentIntents.StripePaymentIntents')                    
-                    ]);
+                [
+                    'methods' => [],
+                    'components' => ['StripePaymentIntents.StripePaymentIntents' => ['GetMode', 'HandleWebhook']]
+                ]);
+            $this->Controller->StripePaymentIntents
+                ->expects($this->once())
+                ->method('GetMode')
+                ->will($this->returnValue('test'));
         }
 
         public function testIndexCallsComponent()
