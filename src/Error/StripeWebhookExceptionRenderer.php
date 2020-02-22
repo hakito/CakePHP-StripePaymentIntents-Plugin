@@ -1,6 +1,8 @@
 <?php
 
-App::uses('ExceptionRenderer', 'Error');
+namespace StripePaymentIntents\Lib\Error;
+
+use Cake\Error\ExceptionRenderer;
 
 class StripeWebhookExceptionRenderer extends ExceptionRenderer {
     public function badRequest($error) {

@@ -1,10 +1,13 @@
 <?php
 
-App::uses('AppController', 'Controller');
 
 /**
  * @property StripePaymentIntentsComponent StripePaymentIntents
  */
+namespace StripePaymentIntents\Controller;
+
+use Cake\Event\Event;
+
 class StripePaymentIntentsWebhookController extends AppController
 {
     public $components = ['StripePaymentIntents.StripePaymentIntents'];
@@ -18,16 +21,16 @@ class StripePaymentIntentsWebhookController extends AppController
         '54.241.31.102',
         '54.241.34.107'];
 
-    function beforeFilter()
+    function beforeFilter(Event $event)
     {
-        parent::beforeFilter();        
+        parent::beforeFilter($event);        
         if ($this->StripePaymentIntents->GetMode() == 'test' || in_array($_SERVER['REMOTE_ADDR'], self::$stripeWebhookIps))
             Configure::write('Exception.renderer', 'StripePaymentIntents.StripeWebhookExceptionRenderer');
     }
 
-    function beforeRender() {
-        parent::beforeRender();
-        $this->layout = 'plain';
+    function beforeRender(Event $event) {
+        parent::beforeRender($event);
+        $this->viewBuilder()->setLayout('plain');
     }
 
     public function index()

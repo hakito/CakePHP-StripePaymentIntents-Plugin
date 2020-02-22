@@ -2,10 +2,10 @@ language: php
 service:
   - docker
 before_script:
-  - composer require php-coveralls/php-coveralls
-  - mkdir build  
+  - composer require php-coveralls/php-coveralls --no-interaction
+  - mkdir build
 script:
-  - docker run -v "$(pwd):/plugin" hakito/cake-plugin-test AllStripePaymentIntents --coverage-clover /plugin/build/cover.xml
+  - docker run --rm -v "$(pwd):/plugin" -w="/plugin" --entrypoint="" hakito/cake-plugin-test vendor/bin/phpunit --coverage-clover build/cover.xml
 after_success:
   - sed "s:name=\"\\/plugin:name=\"\\$(pwd):" < build/cover.xml > build/host-cover.xml
-  - Vendor/bin/php-coveralls -v --coverage_clover build/host-cover.xml --json_path build/cover.json
+  - vendor/bin/php-coveralls -v --coverage_clover build/host-cover.xml --json_path build/cover.json

@@ -1,10 +1,16 @@
 <?php
 
-App::uses('StripePaymentIntentsComponent', 'StripePaymentIntents.Controller/Component');
-App::uses('ComponentCollection', 'Controller');
-App::import('StripePaymentIntents.Test', 'Config');
+namespace StripePaymentIntents\TestCase\Controller\Component;
 
-class StripePaymentIntentsComponentTest extends CakeTestCase {
+use Cake\Cache\Cache;
+use Cake\Controller\ComponentRegistry;
+use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\TestSuite\TestCase;
+
+use StripePaymentIntents\Controller\Component\StripePaymentIntentsComponent;
+
+class StripePaymentIntentsComponentTest extends TestCase {
     
     /** @var StripePaymentIntentsComponent */
     private $Component;
@@ -17,19 +23,24 @@ class StripePaymentIntentsComponentTest extends CakeTestCase {
      */
     public function setUp()
     {
-        parent::setUp();        
+        parent::setUp();
         $this->originalConfig = Configure::read('StripePaymentIntents');
         $copy = $this->originalConfig;
         $copy['keys']['test']['public'] = 'pk_test';        
         $copy['keys']['test']['secret'] = 'sk_test_4eC39HqLyjWDarjtT1zdp7dc';
         Configure::write('StripePaymentIntents', $copy);    
-        date_default_timezone_set("UTC");
-        $Collection = new ComponentCollection();
-        $mockedController = $this->getMock('Controller', ['stripeWebhookCallback']);
-        $this->Controller = $mockedController;
-        $this->Component = new StripePaymentIntentsComponent($Collection);
-        /** @noinspection PhpParamsInspection */
-        $this->Component->startup($mockedController);
+
+        date_default_timezone_set("UTC");               
+        $this->Controller = $this->getMockBuilder('\Cake\Controller\Controller')
+            ->setMethods(['stripeWebhookCallback'])
+            ->getMock();
+
+        $registry = new ComponentRegistry();
+        $this->Component = new StripePaymentIntentsComponent($registry);
+
+        $event = new Event('Controller.startup', $this->Controller);
+        $this->Component->startup($event);
+
         Cache::clear();        
     } 
 

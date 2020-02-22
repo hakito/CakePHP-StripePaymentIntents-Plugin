@@ -11,17 +11,24 @@
             "homepage": "https://github.com/hakito/CakePHP-StripePaymentIntents-Plugin/graphs/contributors"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "StripePaymentIntents\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StripePaymentIntents\\Test\\": "tests/"
+        }
+    },       
     "require": {
-        "php": "^7.0",
+        "cakephp/cakephp": "^3.7",
         "stripe/stripe-php": "^7.12"
     },
     "extra": {
         "installer-name": "StripePaymentIntents"
     },
-    "config": {
-        "vendor-dir": "Vendor"
-    },    
     "require-dev": {
-        "phpunit/phpunit": "^5.7.27"
+        "phpunit/phpunit": "^6.0"
     }
 }

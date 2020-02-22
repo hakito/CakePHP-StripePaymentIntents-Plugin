@@ -1,10 +1,13 @@
 <?php
 
-App::uses('Component', 'Controller');
+namespace StripePaymentIntents\Controller\Component;
 
-use \Stripe\PaymentIntent;
-use \Stripe\Stripe;
-use \Stripe\Event;
+use Cake\Controller\Component;
+use Cake\Core\Configure;
+
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
+use Stripe\Event;
 
 class StripePaymentIntentsComponent extends Component
 {   
@@ -17,20 +20,19 @@ class StripePaymentIntentsComponent extends Component
     public function __construct($collection)
     {
         parent::__construct($collection);
-        $config = $this->GetConfig();
+        $config = $this->_GetConfig();
         $this->mode = $config['mode'];
         $keys = &$config['keys'][$this->mode];
         Stripe::setApiKey($keys['secret']);
         $this->publicKey = $keys['public'];
     }
 
-    public function startup(\Controller $controller)
+    public function startup($event)
     {
-        parent::startup($controller);
-        $this->Controller = $controller;
+        $this->Controller = $event->getSubject();
     }
 
-    private function GetConfig() { return Configure::read('StripePaymentIntents'); }
+    private function _GetConfig() { return Configure::read('StripePaymentIntents'); }
 
     /**
      * Creates a PaymentIntent for the given amount and optional arguments
@@ -39,7 +41,7 @@ class StripePaymentIntentsComponent extends Component
     public function Create($amount, $arguments = []) 
     {
         $arguments = array_merge(
-            ['amount' => $amount, 'currency' => $this->GetConfig()['currency']],
+            ['amount' => $amount, 'currency' => $this->_GetConfig()['currency']],
             $arguments
         );
 
@@ -84,7 +86,7 @@ class StripePaymentIntentsComponent extends Component
             $this->ThrowLogged(new \UnexpectedValueException('Event has no type'));
         
         $this->WriteLog('BEGIN: HandleEvent ' . $event->type);
-        $config = $this->GetConfig();
+        $config = $this->_GetConfig();
         if (!empty($config['callback']))
         {
             $controller = &$this->Controller;
@@ -96,10 +98,10 @@ class StripePaymentIntentsComponent extends Component
 
     private function WriteLog($message)
     {
-        if (!$this->GetConfig()['logging'])
+        if (!$this->_GetConfig()['logging'])
             return;
 
-        CakeLog::write('stripe_pi', $message);
+        Log::write('stripe_pi', $message);
     }
 
     private function ThrowLogged($ex)

@@ -1,6 +1,6 @@
 <?php
-
-Configure::write('StripePaymentIntents', [
+return [
+    'StripePaymentIntents' => [
     'mode'=> 'test',
     'currency' => 'eur',
     'keys' => [
@@ -17,4 +17,5 @@ Configure::write('StripePaymentIntents', [
 
     // optional
     'callback' => 'stripeWebhookCallback', // Name of callback function for stripe events to be called in app controller
-]);
+    ]
+];
