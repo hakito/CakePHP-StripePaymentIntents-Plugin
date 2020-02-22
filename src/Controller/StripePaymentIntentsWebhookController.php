@@ -7,6 +7,7 @@
 namespace StripePaymentIntents\Controller;
 
 use Cake\Event\Event;
+use Cake\Core\Configure;
 
 class StripePaymentIntentsWebhookController extends AppController
 {

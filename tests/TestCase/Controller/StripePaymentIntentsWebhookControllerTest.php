@@ -12,20 +12,15 @@ class StripePaymentIntentsWebhookControllerTest extends TestCase
     use IntegrationTestTrait;
 
     public function setUp()
-    {
-        // $this->Controller = $this->generate('StripePaymentIntents.StripePaymentIntentsWebhook',
-        //     [
-        //         'methods' => [],
-        //         'components' => ['StripePaymentIntents.StripePaymentIntents' => ['GetMode', 'HandleWebhook']]
-        //     ]);
-        // $this->Controller->StripePaymentIntents
-        //     ->expects($this->once())
-        //     ->method('GetMode')
-        //     ->will($this->returnValue('test'));
+    {        
         $this->component = $this->getMockBuilder('StripePaymentIntents\Controller\Component\StripePaymentIntentsComponent')
             ->setMethods(['GetMode', 'HandleWebhook'])
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->component->expects($this->once())
+            ->method('GetMode')
+            ->will($this->returnValue('test'));
     }
 
     public function controllerSpy($event, $controller = null)
