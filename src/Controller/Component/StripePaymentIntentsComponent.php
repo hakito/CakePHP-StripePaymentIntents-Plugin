@@ -4,6 +4,7 @@ namespace StripePaymentIntents\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Core\Configure;
+use Cake\Log\Log;
 
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
