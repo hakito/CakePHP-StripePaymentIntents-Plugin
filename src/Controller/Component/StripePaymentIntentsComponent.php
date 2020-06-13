@@ -7,13 +7,12 @@ use Cake\Core\Configure;
 
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
-use Stripe\Event;
 
 class StripePaymentIntentsComponent extends Component
-{   
+{
     private $publicKey;
     public function GetPublicKey() { return $this->publicKey; }
-    
+
     private $mode;
     public function GetMode() { return $this->mode; }
 
@@ -38,7 +37,7 @@ class StripePaymentIntentsComponent extends Component
      * Creates a PaymentIntent for the given amount and optional arguments
      * @return \Stripe\PaymentIntent
      */
-    public function Create($amount, $arguments = []) 
+    public function Create($amount, $arguments = [])
     {
         $arguments = array_merge(
             ['amount' => $amount, 'currency' => $this->_GetConfig()['currency']],
@@ -60,40 +59,47 @@ class StripePaymentIntentsComponent extends Component
     /**
      * Handles the Stripe webhook
      * @param string $rawPostStream will read from this stream or file with file_get_contents
-     * @throws InvalidCallbackException when callback is not callable
      * @throws \UnexpectedValueException when event could not be deserialized
      */
     public function HandleWebhook($rawPostStream = 'php://input')
     {
-        $this->WriteLog('BEGIN: Handle webhook');        
+        $this->WriteLog('BEGIN: Handle webhook');
 
         $payload = @file_get_contents($rawPostStream);
-        $event = @Event::constructFrom(
+        $event = @\Stripe\Event::constructFrom(
             json_decode($payload, true)
         );
 
         if (empty($event))
             $this->ThrowLogged(new \UnexpectedValueException('Event decoding failed'));
-        
+
         $this->HandleEvent($event);
 
-        $this->WriteLog('END: Handle webhook');        
+        $this->WriteLog('END: Handle webhook');
     }
 
-    public function HandleEvent(Event $event)
+    public function HandleEvent(\Stripe\Event $event)
     {
         if(empty($event->type))
             $this->ThrowLogged(new \UnexpectedValueException('Event has no type'));
-        
-        $this->WriteLog('BEGIN: HandleEvent ' . $event->type);
-        $config = $this->_GetConfig();
-        if (!empty($config['callback']))
-        {
-            $controller = &$this->Controller;
-            call_user_func_array([$controller, $config['callback']], [$event]);
-        }
 
-        $this->WriteLog('END: HandleEvent ' . $event->type);
+        $this->WriteLog('BEGIN: HandleEvent ' . $event->type);
+        $cakeEvent = new \Cake\Event\Event('StripePaymentIntents.Event', $this,
+        [
+            'stripeEvent' => $event
+        ]);
+        $this->Controller->getEventManager()->dispatch($cakeEvent);
+
+        try
+        {
+            $result = $event->getResult();
+            if(empty($result['handled']))
+                throw new \Exception('Stripe event ' . $event->type . ' is unhandled');
+        }
+        finally
+        {
+            $this->WriteLog('END: HandleEvent ' . $event->type);
+        }
     }
 
     private function WriteLog($message)

@@ -7,7 +7,7 @@
 # CakePHP-StripePaymentIntents-Plugin
 CakePHP plugin for Stripe Payment Intents
 
-Installation
+## Installation
 ------------
 
 ### Using composer
@@ -22,10 +22,21 @@ composer require hakito/cakephp-stripe-payment-intents-plugin
 
 Download the plugin to app/Plugin/StripePaymentIntents.
 
-Confguration
-------------
+### Load the plugin
 
-Load the Plugin in your bootstrap.php
+Load the Plugin in your Application.php
+
+```php
+public function bootstrap()
+{
+    // Call parent to load bootstrap from files.
+    parent::bootstrap();
+
+    $this->addPlugin(\StripePaymentIntents\Plugin::class, ['routes' => true]);
+}
+```
+
+## Confguration
 
 ```php
 CakePlugin::load('StripePaymentIntents', array('routes' => true));
@@ -38,10 +49,10 @@ CakeLog::config('stripe_pi', array(
 
 ```
 
-Add the following config to your core.php
+Add the following config to your app.php
 
 ```php
-Configure::write('StripePaymentIntents', [
+'StripePaymentIntents' => [
     'mode'=> 'test',
     'currency' => 'eur',
     'keys' => [
@@ -55,19 +66,36 @@ Configure::write('StripePaymentIntents', [
         ]
     ],
     'logging' => false,
-
-    // optional
-    'callback' => 'stripeWebhookCallback', // Name of callback function for stripe events to be called in app controller
-]);
+]
 ```
 
-Usage
------
-
-Add the plugin component to your controller:
+You can also setup logging
 
 ```php
-public $components = ['StripePaymentIntents.StripePaymentIntents'];
+'Log' =>
+[
+    'stripe' =>
+    [
+        'className' => FileLog::class,
+        'path' => LOGS,
+        'file' => 'stripe',
+        'scopes' => ['stripe'],
+        'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
+    ],
+]
+```
+
+## Usage
+
+In your payment handling controller:
+
+```php
+// Load the component
+public function initialize()
+{
+    parent::initialize();
+    $this->loadComponent('StripePaymentIntents.StripePaymentIntents');
+}
 ```
 
 Create or retrieve a payment intent for the checkout process
@@ -88,19 +116,15 @@ $this->set('StripePublicKey', $this->StripePaymentIntents->GetPublicKey());
 
 Implement the view behavior according to [stripe documentation](https://stripe.com/docs/payments/accept-a-payment#web-collect-card-details).
 
-### Webhook callback
+## Stripe webhook events
 
-You have to implement the webhook callback function in your AppController:
+You have to handle stripe events implementing an event handler:
 
 ```php
-/**
-* @param \Stripe\Event $event
-*/
-public function stripeWebhookCallback($event)
+\Cake\Event\EventManager::instance()->on('StripePaymentIntents.Event',
+function (\Cake\Event\Event $event, \Stipe\Event $stripeEvent)
 {
-    if ($event->type == 'payment_intent.succeeded')
-    {
-       // handle success
-    }
-}
+  return ['handled' => true]; // If you don't set the handled flag to true
+                              // the plugin will throw an exception
+});
 ```
