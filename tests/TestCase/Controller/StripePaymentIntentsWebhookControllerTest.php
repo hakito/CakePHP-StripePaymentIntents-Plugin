@@ -12,7 +12,7 @@ class StripePaymentIntentsWebhookControllerTest extends TestCase
     use IntegrationTestTrait;
 
     public function setUp()
-    {        
+    {
         $this->component = $this->getMockBuilder('StripePaymentIntents\Controller\Component\StripePaymentIntentsComponent')
             ->setMethods(['GetMode', 'HandleWebhook'])
             ->disableOriginalConstructor()
@@ -27,13 +27,13 @@ class StripePaymentIntentsWebhookControllerTest extends TestCase
     {
         /* @var $controller StripePaymentIntentsWebhookController */
         $controller = $event->getSubject();
-        $controller->StripePaymentIntents = $this->component;            
-    }    
+        $controller->StripePaymentIntents = $this->component;
+    }
 
     public function testIndexCallsComponent()
     {
         $this->component->expects($this->once())
                     ->method('HandleWebhook');
-        $this->get('/StripePaymentIntents/Webhook');
-    }        
+        $this->post('/StripePaymentIntents/Webhook');
+    }
 }

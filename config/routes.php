@@ -7,7 +7,7 @@ Router::plugin(
     'StripePaymentIntents',
     ['path' => '/StripePaymentIntents'], 
     function (RouteBuilder $routes) {
-        $routes->get('/Webhook',
+        $routes->post('/Webhook',
             [
                 'controller' => 'StripePaymentIntentsWebhook',
             ]
