@@ -108,7 +108,7 @@ class StripePaymentIntentsComponent extends Component
         if (!$this->_GetConfig()['logging'])
             return;
 
-        Log::write('stripe_pi', $message);
+        Log::info($message, ['scope' => 'Stripe']);
     }
 
     private function ThrowLogged($ex)

@@ -79,8 +79,8 @@ You can also setup logging
         'className' => FileLog::class,
         'path' => LOGS,
         'file' => 'stripe',
-        'scopes' => ['stripe'],
-        'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
+        'scopes' => ['Stripe'],
+        'levels' => ['warning', 'error', 'critical', 'alert', 'emergency', 'info'],
     ],
 ]
 ```
