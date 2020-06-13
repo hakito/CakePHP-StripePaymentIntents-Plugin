@@ -109,6 +109,11 @@ class StripePaymentIntentsComponentTest extends TestCase {
     public function testHandleEvent()
     {
         $dataPath = self::GetDataPath('event.json');
+        \Cake\Event\EventManager::instance()->on('StripePaymentIntents.Event',
+        function (\Cake\Event\Event $event, \Stripe\Event $stripeEvent)
+        {
+            return ['handled' => true]; 
+        });
         $this->Component->HandleWebhook($dataPath);
         $this->assertEventFired('StripePaymentIntents.Event', $this->Controller->getEventManager());
     }

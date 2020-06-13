@@ -92,7 +92,7 @@ class StripePaymentIntentsComponent extends Component
 
         try
         {
-            $result = $event->getResult();
+            $result = $cakeEvent->getResult();
             if(empty($result['handled']))
                 throw new \Exception('Stripe event ' . $event->type . ' is unhandled');
         }

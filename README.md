@@ -122,7 +122,7 @@ You have to handle stripe events implementing an event handler:
 
 ```php
 \Cake\Event\EventManager::instance()->on('StripePaymentIntents.Event',
-function (\Cake\Event\Event $event, \Stipe\Event $stripeEvent)
+function (\Cake\Event\Event $event, \Stripe\Event $stripeEvent)
 {
   return ['handled' => true]; // If you don't set the handled flag to true
                               // the plugin will throw an exception
