@@ -5,14 +5,13 @@ namespace StripePaymentIntents\TestCase\Controller;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
-use StripePaymentIntents\Controller\StripePaymentIntentsWebhookController;
-
 class StripePaymentIntentsWebhookControllerTest extends TestCase
 {
     use IntegrationTestTrait;
 
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setUp();
         $this->component = $this->getMockBuilder('StripePaymentIntents\Controller\Component\StripePaymentIntentsComponent')
             ->setMethods(['GetMode', 'HandleWebhook'])
             ->disableOriginalConstructor()

@@ -20,15 +20,15 @@
         "psr-4": {
             "StripePaymentIntents\\Test\\": "tests/"
         }
-    },       
+    },
     "require": {
-        "cakephp/cakephp": "^3.7",
+        "cakephp/cakephp": "^4.0",
         "stripe/stripe-php": "^7.12"
     },
     "extra": {
         "installer-name": "StripePaymentIntents"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.0"
+        "phpunit/phpunit": "^8.5"
     }
 }

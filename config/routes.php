@@ -5,7 +5,7 @@ use Cake\Routing\Router;
 
 Router::plugin(
     'StripePaymentIntents',
-    ['path' => '/StripePaymentIntents'], 
+    ['path' => '/StripePaymentIntents'],
     function (RouteBuilder $routes) {
         $routes->post('/Webhook',
             [

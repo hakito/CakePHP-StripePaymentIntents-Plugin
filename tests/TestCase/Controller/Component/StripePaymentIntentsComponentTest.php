@@ -21,7 +21,7 @@ class StripePaymentIntentsComponentTest extends TestCase {
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->originalConfig = Configure::read('StripePaymentIntents');
@@ -45,9 +45,10 @@ class StripePaymentIntentsComponentTest extends TestCase {
         Cache::clear();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Configure::write('StripePaymentIntents', $this->originalConfig);
+        parent::tearDown();
     }
 
     public function testGetMode()

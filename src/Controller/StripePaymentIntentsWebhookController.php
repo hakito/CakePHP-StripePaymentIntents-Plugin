@@ -8,11 +8,11 @@ namespace StripePaymentIntents\Controller;
 
 use Cake\Event\Event;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 
 class StripePaymentIntentsWebhookController extends AppController
 {
-    public $components = ['StripePaymentIntents.StripePaymentIntents'];
-
     // https://stripe.com/files/ips/ips_webhooks.txt
     static $stripeWebhookIps = [
         '54.187.174.169',
@@ -22,14 +22,19 @@ class StripePaymentIntentsWebhookController extends AppController
         '54.241.31.102',
         '54.241.34.107'];
 
-    function beforeFilter(Event $event)
+    function initialize(): void
     {
-        parent::beforeFilter($event);        
+        $this->loadComponent('StripePaymentIntents.StripePaymentIntents');
+    }
+
+    function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
         if ($this->StripePaymentIntents->GetMode() == 'test' || in_array($_SERVER['REMOTE_ADDR'], self::$stripeWebhookIps))
             Configure::write('Exception.renderer', 'StripePaymentIntents.StripeWebhookExceptionRenderer');
     }
 
-    function beforeRender(Event $event) {
+    function beforeRender(EventInterface $event) {
         parent::beforeRender($event);
         $this->viewBuilder()->setLayout('plain');
     }
@@ -44,7 +49,7 @@ class StripePaymentIntentsWebhookController extends AppController
         {
             throw new BadRequestException($e->getMessage(), 400);
         }
-        
+
         $this->set('contents', 'OK');
     }
 }

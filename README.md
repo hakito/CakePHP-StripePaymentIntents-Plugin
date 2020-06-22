@@ -5,7 +5,7 @@
 [![License](https://poser.pugx.org/hakito/cakephp-stripe-payment-intents-plugin/license)](https://packagist.org/packages/hakito/cakephp-stripe-payment-intents-plugin)
 
 # CakePHP-StripePaymentIntents-Plugin
-CakePHP plugin for Stripe Payment Intents
+CakePHP 4.x plugin for Stripe Payment Intents
 
 ## Installation
 ------------
@@ -27,7 +27,7 @@ Download the plugin to app/Plugin/StripePaymentIntents.
 Load the Plugin in your Application.php
 
 ```php
-public function bootstrap()
+public function bootstrap(): void
 {
     // Call parent to load bootstrap from files.
     parent::bootstrap();
@@ -37,17 +37,6 @@ public function bootstrap()
 ```
 
 ## Confguration
-
-```php
-CakePlugin::load('StripePaymentIntents', array('routes' => true));
-
-// If you want to collect the log stream configure a logging scope for 'stripe_pi':
-CakeLog::config('stripe_pi', array(
-	'engine' => 'FileLog',
-	'scopes' => array('stripe_pi'),
-));
-
-```
 
 Add the following config to your app.php
 
@@ -91,7 +80,7 @@ In your payment handling controller:
 
 ```php
 // Load the component
-public function initialize()
+public function initialize(): void
 {
     parent::initialize();
     $this->loadComponent('StripePaymentIntents.StripePaymentIntents');
@@ -124,7 +113,7 @@ You have to handle stripe events implementing an event handler:
 \Cake\Event\EventManager::instance()->on('StripePaymentIntents.Event',
 function (\Cake\Event\Event $event, \Stripe\Event $stripeEvent)
 {
-  return ['handled' => true]; // If you don't set the handled flag to true
-                              // the plugin will throw an exception
+    return ['handled' => true]; // If you don't set the handled flag to true
+                                // the plugin will throw an exception
 });
 ```
