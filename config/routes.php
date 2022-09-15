@@ -1,9 +1,9 @@
 <?php
 
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin(
+/** @var \Cake\Routing\RouteBuilder $routes */
+$routes->plugin(
     'StripePaymentIntents',
     ['path' => '/StripePaymentIntents'],
     function (RouteBuilder $routes) {
