@@ -8,6 +8,7 @@ use Cake\Log\Log;
 
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
+use Throwable;
 
 class StripePaymentIntentsComponent extends Component
 {
@@ -16,6 +17,8 @@ class StripePaymentIntentsComponent extends Component
 
     private $mode;
     public function GetMode() { return $this->mode; }
+
+    private \Cake\Controller\Controller $Controller;
 
     public function __construct($collection)
     {
@@ -27,7 +30,7 @@ class StripePaymentIntentsComponent extends Component
         $this->publicKey = $keys['public'];
     }
 
-    public function startup($event)
+    public function startup(\Cake\Event\EventInterface $event)
     {
         $this->Controller = $event->getSubject();
     }
@@ -66,13 +69,17 @@ class StripePaymentIntentsComponent extends Component
     {
         $this->WriteLog('BEGIN: Handle webhook');
 
-        $payload = @file_get_contents($rawPostStream);
-        $event = @\Stripe\Event::constructFrom(
-            json_decode($payload, true)
-        );
-
-        if (empty($event))
+        try
+        {
+            $payload = @file_get_contents($rawPostStream);
+            $event = @\Stripe\Event::constructFrom(
+                json_decode($payload, true)
+            );
+        }
+        catch (Throwable $t)
+        {
             $this->ThrowLogged(new \UnexpectedValueException('Event decoding failed'));
+        }  
 
         $this->HandleEvent($event);
 

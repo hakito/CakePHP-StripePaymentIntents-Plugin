@@ -40,6 +40,7 @@ define('CAKE', CORE_PATH . 'src' . DS);
  * and define the data required by your plugin here.
  */
 require_once join(DS, [CORE_PATH, 'config', 'bootstrap.php']);
+require CAKE . 'functions.php';
 
 use Cake\Cache\Cache;
 use Cake\Core\Configure;

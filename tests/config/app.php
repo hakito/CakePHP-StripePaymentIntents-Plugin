@@ -2,15 +2,10 @@
 <?php
 
 use Cake\Cache\Engine\FileEngine;
-use Cake\Database\Connection;
-use Cake\Database\Driver\Mysql;
-use Cake\Error\ExceptionRenderer;
-use Cake\Log\Engine\FileLog;
-use Cake\Mailer\Transport\MailTransport;
 
 return  
 [
-    'App' => ['namespace' => 'StripePaymentIntents\Test\TestApp'],
+    'App' => ['namespace' => 'StripePaymentIntents\Test\TestApp', 'encoding' => 'UTF-8'],
 
     /**
      * Configure the cache adapters.

@@ -6,6 +6,8 @@ use Cake\Cache\Cache;
 use Cake\Controller\ComponentRegistry;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 
 use StripePaymentIntents\Controller\Component\StripePaymentIntentsComponent;
@@ -16,6 +18,9 @@ class StripePaymentIntentsComponentTest extends TestCase {
     private $Component;
 
     private $originalConfig;
+
+    /** @var \Cake\Controller\Controller */
+    protected $Controller;
     /**
      * setUp method
      *
@@ -31,12 +36,15 @@ class StripePaymentIntentsComponentTest extends TestCase {
         Configure::write('StripePaymentIntents', $copy);
 
         date_default_timezone_set("UTC");
+        $request = new ServerRequest();
+        $response = new Response();
         $this->Controller = $this->getMockBuilder(\Cake\Controller\Controller::class)
-            ->setMethods(['dummy'])
+            ->setConstructorArgs([$request, $response])
+            ->onlyMethods([])
             ->getMock();
         $this->Controller->getEventManager()->setEventList(new \Cake\Event\EventList());
 
-        $registry = new ComponentRegistry();
+        $registry = new ComponentRegistry($this->Controller);
         $this->Component = new StripePaymentIntentsComponent($registry);
 
         $event = new Event('Controller.startup', $this->Controller);
